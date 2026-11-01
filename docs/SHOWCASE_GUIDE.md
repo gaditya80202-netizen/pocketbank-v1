@@ -17,7 +17,7 @@ This banking demo app is separate from the AI review agent. Do not copy the revi
 | Branch | Suggested PR title | Intended review signal |
 |---|---|---|
 | `demo/security-hardcoded-secret` | `Add admin account search` | Security specialist should identify the hardcoded credential and unsafe SQL query. |
-| `demo/quality-overdraft-check` | `Adjust transfer balance validation` | Quality specialist should identify the weakened insufficient-funds guard. |
+| `demo/quality-overdraft-check` | `Adjust transfer balance validation` | Quality specialist should identify the weakened insufficient-funds guard; the database constraint prevents a negative balance but the API raises an unhandled database error instead of returning 409. |
 | `demo/tests-daily-limit-no-tests` | `Add a daily outgoing transfer limit` | Test specialist should identify missing coverage for the newly added limit and its boundary cases. |
 | `demo/docs-statement-endpoint` | `Add account statement endpoint` | Documentation specialist should identify that the public endpoint is absent from the API reference. |
 | `demo/clean-activity-summary` | `Add account activity summary` | Demonstrate a feature with implementation, tests, and documentation changed together. |
@@ -52,7 +52,7 @@ Repeat with the other branch names and titles in the table.
 
 1. Start with the clean `main` branch and explain the app's account and transfer flow.
 2. Open the security PR. Show the changed lines, then the AI's finding and its rationale.
-3. Open the quality PR. Explain why allowing an overdraft is a business-logic defect.
+3. Open the quality PR. Explain why the service must reject insufficient funds before the database update; the database constraint masks the defect but causes a 500-style error instead of a controlled 409 response.
 4. Open the daily-limit PR. Show that the implementation exists but the new policy has no tests for below-limit, exact-limit, and over-limit cases.
 5. Open the statement endpoint PR. Show the code change and the stale API reference.
 6. Open the clean feature PR. Show the implementation, tests, and documentation arriving together.

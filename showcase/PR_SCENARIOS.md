@@ -3,7 +3,7 @@
 The actual scenarios live on Git branches so they can be pushed and opened as real pull requests. This file is a quick index.
 
 - `demo/security-hardcoded-secret`: intentionally unsafe admin lookup for security-review demonstration.
-- `demo/quality-overdraft-check`: intentionally weakened balance guard for quality-review demonstration.
+- `demo/quality-overdraft-check`: intentionally weakened insufficient-funds guard; the database constraint prevents a negative balance, but an unhandled database error replaces the expected 409 response.
 - `demo/tests-daily-limit-no-tests`: daily outgoing-transfer limit implemented without matching tests; documentation is updated to isolate the test-coverage gap.
 - `demo/docs-statement-endpoint`: new statement endpoint without an API reference update.
 - `demo/clean-activity-summary`: an activity summary feature with implementation, tests, and API documentation.
