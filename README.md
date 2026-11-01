@@ -15,7 +15,7 @@ The project is intentionally small enough to understand, but has multiple files,
 - Transfer simulated funds atomically between accounts.
 - Prevent self-transfers and transfers that exceed the sender's balance.
 - Record matching debit and credit ledger entries.
-- Retrieve a transfer receipt and account transaction history.
+- Retrieve a transfer receipt, account transaction history, and an aggregate account activity summary.
 - Interactive API documentation at `/docs`.
 - SQLite persistence; no external database server is required.
 
@@ -71,6 +71,7 @@ The tests use a temporary SQLite database, so they do not change your local demo
 | `GET` | `/accounts` | List accounts |
 | `GET` | `/accounts/{account_id}` | Get account and current balance |
 | `GET` | `/accounts/{account_id}/transactions` | List up to 100 ledger entries |
+| `GET` | `/accounts/{account_id}/activity-summary` | Summarize credits, debits, net flow, and entry count |
 | `POST` | `/transfers` | Transfer simulated funds |
 | `GET` | `/transfers/{transfer_id}` | Retrieve a transfer receipt |
 

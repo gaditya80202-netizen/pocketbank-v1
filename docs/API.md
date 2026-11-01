@@ -29,6 +29,17 @@ Return one account and its current balance. Returns `404` when the account does 
 
 Return the newest ledger entries for the account. `limit` must be between 1 and 100. Entry types are `DEPOSIT`, `DEBIT`, and `CREDIT`. Returns `404` for an unknown account.
 
+## `GET /accounts/{account_id}/activity-summary`
+
+Return the account's aggregate ledger activity:
+
+- `total_credits` — sum of opening deposits and incoming transfers.
+- `total_debits` — sum of outgoing transfers.
+- `net_flow` — credits minus debits.
+- `transaction_count` — number of ledger entries.
+
+Returns `404` when the account does not exist. Values are returned with two decimal places.
+
 ## `POST /transfers`
 
 Transfer simulated funds between two different accounts.

@@ -55,3 +55,13 @@ class TransactionResponse(BaseModel):
     amount: Decimal
     description: str
     created_at: str
+
+
+class ActivitySummaryResponse(BaseModel):
+    """Aggregated credit and debit totals for an account."""
+
+    account_id: str
+    total_credits: Decimal
+    total_debits: Decimal
+    net_flow: Decimal
+    transaction_count: int

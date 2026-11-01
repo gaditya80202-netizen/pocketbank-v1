@@ -226,3 +226,30 @@ def list_transactions(
         for row in rows
     ]
 
+
+
+
+def get_activity_summary(connection: sqlite3.Connection, account_id: str) -> dict[str, object]:
+    """Calculate total credits, debits, net flow, and ledger-entry count."""
+
+    if connection.execute("SELECT 1 FROM accounts WHERE id = ?", (account_id,)).fetchone() is None:
+        raise AccountNotFoundError(account_id)
+
+    row = connection.execute(
+        """SELECT
+               COALESCE(SUM(CASE WHEN entry_type IN ('DEPOSIT', 'CREDIT') THEN amount_cents ELSE 0 END), 0) AS credits,
+               COALESCE(SUM(CASE WHEN entry_type = 'DEBIT' THEN amount_cents ELSE 0 END), 0) AS debits,
+               COUNT(*) AS transaction_count
+           FROM transactions
+           WHERE account_id = ?""",
+        (account_id,),
+    ).fetchone()
+    credits = int(row["credits"])
+    debits = int(row["debits"])
+    return {
+        "account_id": account_id,
+        "total_credits": _from_cents(credits),
+        "total_debits": _from_cents(debits),
+        "net_flow": _from_cents(credits - debits),
+        "transaction_count": int(row["transaction_count"]),
+    }

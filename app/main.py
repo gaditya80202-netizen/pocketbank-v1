@@ -10,6 +10,7 @@ from app.database import get_database, initialize_database
 from app.models import (
     AccountCreate,
     AccountResponse,
+    ActivitySummaryResponse,
     TransactionResponse,
     TransferCreate,
     TransferResponse,
@@ -20,6 +21,7 @@ from app.service import (
     InvalidTransferError,
     create_account,
     get_account,
+    get_activity_summary,
     get_transfer,
     list_accounts,
     list_transactions,
@@ -107,6 +109,22 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
 
         try:
             return list_transactions(connection, account_id, limit)
+        except AccountNotFoundError as exc:
+            raise HTTPException(status_code=404, detail="Account not found.") from exc
+
+    @application.get(
+        "/accounts/{account_id}/activity-summary",
+        response_model=ActivitySummaryResponse,
+        tags=["Accounts"],
+    )
+    def get_account_activity_summary(
+        account_id: str,
+        connection: sqlite3.Connection = Depends(get_database),
+    ) -> dict[str, object]:
+        """Return aggregate credits, debits, net flow, and ledger-entry count."""
+
+        try:
+            return get_activity_summary(connection, account_id)
         except AccountNotFoundError as exc:
             raise HTTPException(status_code=404, detail="Account not found.") from exc
 
