@@ -26,7 +26,9 @@ All four agents still run on every PR. These branches are designed to make one s
 
 ## Push the branches to GitHub
 
-After extracting the source ZIP or cloning the Git bundle, create an empty GitHub repository. Then run:
+Create an empty GitHub repository first. Do not initialize it with a README, license, or `.gitignore`; this project already has those files.
+
+**Option A — use the full repository ZIP (easiest):** this archive includes the `.git` directory and all six local branches. Extract it, open a terminal inside the extracted `PocketBank_Demo_Repository` folder, and run:
 
 ```bash
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
@@ -34,7 +36,26 @@ git push -u origin main
 git push origin --all
 ```
 
-Replace the URL with your repository URL. The bundle contains all local branches; `git push origin --all` publishes them.
+Replace the URL with your repository URL. The second command pushes the five `demo/*` branches as well as any other local branches.
+
+**Option B — use the Git bundle:** clone the bundle, change its `origin` URL to your new GitHub repository, create local branches from the bundle's remote-tracking refs, and push them:
+
+```bash
+git clone /path/to/PocketBank_Demo_Git_Bundle.bundle pocketbank-demo
+cd pocketbank-demo
+git remote set-url origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+
+git branch demo/security-hardcoded-secret origin/demo/security-hardcoded-secret
+git branch demo/quality-overdraft-check origin/demo/quality-overdraft-check
+git branch demo/tests-daily-limit-no-tests origin/demo/tests-daily-limit-no-tests
+git branch demo/docs-statement-endpoint origin/demo/docs-statement-endpoint
+git branch demo/clean-activity-summary origin/demo/clean-activity-summary
+
+git push -u origin main
+git push origin --all
+```
+
+Replace `/path/to/` and the GitHub URL with your actual paths. The **source-only ZIP** contains the clean `main` source code but no Git history or prebuilt demo branches; use Option A or B when you want the showcase PR branches.
 
 ## Create the PRs
 
