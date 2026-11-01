@@ -16,6 +16,7 @@ from app.models import (
 )
 from app.service import (
     AccountNotFoundError,
+    DailyTransferLimitError,
     InsufficientFundsError,
     InvalidTransferError,
     create_account,
@@ -134,6 +135,8 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
             raise HTTPException(status_code=404, detail="Source or destination account not found.") from exc
         except InsufficientFundsError as exc:
             raise HTTPException(status_code=409, detail="Insufficient funds.") from exc
+        except DailyTransferLimitError as exc:
+            raise HTTPException(status_code=409, detail="Daily outgoing transfer limit exceeded.") from exc
         except InvalidTransferError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 

@@ -13,7 +13,7 @@ The project is intentionally small enough to understand, but has multiple files,
 - Create simulated accounts with an optional opening deposit.
 - View accounts and balances.
 - Transfer simulated funds atomically between accounts.
-- Prevent self-transfers and transfers that exceed the sender's balance.
+- Prevent self-transfers, overdrafts, and transfers that would exceed the UTC daily outgoing limit of 5,000.00 demo currency units.
 - Record matching debit and credit ledger entries.
 - Retrieve a transfer receipt and account transaction history.
 - Interactive API documentation at `/docs`.

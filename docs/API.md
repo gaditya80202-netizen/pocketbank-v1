@@ -44,13 +44,13 @@ Request:
 }
 ```
 
-The amount must be greater than zero and have at most two decimal places. Both accounts must exist, and the sender must have sufficient funds. A successful transfer writes a transfer record plus one debit and one credit ledger entry inside a database transaction.
+The amount must be greater than zero and have at most two decimal places. Both accounts must exist, and the sender must have sufficient funds. A sender may transfer at most 5,000.00 demo currency units per UTC calendar day. A successful transfer writes a transfer record plus one debit and one credit ledger entry inside a database transaction.
 
 Possible errors:
 
 - `400` — source and destination are the same account.
 - `404` — source or destination account does not exist.
-- `409` — insufficient funds.
+- `409` — insufficient funds or the daily outgoing transfer limit would be exceeded.
 - `422` — request validation failed.
 
 ## `GET /transfers/{transfer_id}`

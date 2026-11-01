@@ -18,6 +18,10 @@ class InvalidTransferError(Exception):
     """Raised when a transfer violates a business rule."""
 
 
+class DailyTransferLimitError(Exception):
+    """Raised when a transfer would exceed the account's daily outgoing limit."""
+
+
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -122,6 +126,18 @@ def transfer_funds(
             raise AccountNotFoundError(to_account_id)
         if sender["balance_cents"] < amount_cents:
             raise InsufficientFundsError(from_account_id)
+
+        # The daily policy counts successful outgoing transfers in UTC.
+        today_utc = datetime.now(timezone.utc).date().isoformat()
+        daily_debits = connection.execute(
+            """SELECT COALESCE(SUM(amount_cents), 0) AS total
+               FROM transactions
+               WHERE account_id = ? AND entry_type = 'DEBIT'
+                 AND substr(created_at, 1, 10) = ?""",
+            (from_account_id, today_utc),
+        ).fetchone()["total"]
+        if int(daily_debits) + amount_cents > 500_000:
+            raise DailyTransferLimitError(from_account_id)
 
         transfer_id = uuid.uuid4().hex
         created_at = _now()
