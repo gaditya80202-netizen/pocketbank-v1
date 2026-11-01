@@ -112,7 +112,7 @@ scripts/
 The repository includes local Git branches (also provided in the companion Git bundle):
 
 - `demo/security-hardcoded-secret` — hardcoded admin credential and unsafe SQL construction.
-- `demo/quality-overdraft-check` — a transfer-validation regression that can allow an overdraft.
+- `demo/quality-overdraft-check` — a weakened insufficient-funds guard that causes an unhandled database error instead of a clean 409 response.
 - `demo/tests-daily-limit-no-tests` — a daily outgoing-transfer limit is implemented and documented, but its boundary behavior is not tested.
 - `demo/docs-statement-endpoint` — a new public endpoint is added without updating the API documentation.
 - `demo/clean-activity-summary` — a complete activity-summary feature with tests and documentation.
