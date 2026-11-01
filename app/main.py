@@ -110,6 +110,25 @@ def create_app(database_path: str | Path | None = None) -> FastAPI:
         except AccountNotFoundError as exc:
             raise HTTPException(status_code=404, detail="Account not found.") from exc
 
+    @application.get("/accounts/{account_id}/statement", tags=["Statements"])
+    def get_account_statement(
+        account_id: str,
+        connection: sqlite3.Connection = Depends(get_database),
+    ) -> dict[str, object]:
+        """Build a compact statement with the account balance and recent ledger activity."""
+
+        try:
+            account = get_account(connection, account_id)
+            entries = list_transactions(connection, account_id, limit=100)
+        except AccountNotFoundError as exc:
+            raise HTTPException(status_code=404, detail="Account not found.") from exc
+        return {
+            "account_id": account_id,
+            "owner_name": account["owner_name"],
+            "current_balance": account["balance"],
+            "entries": entries,
+        }
+
     @application.post(
         "/transfers",
         response_model=TransferResponse,
